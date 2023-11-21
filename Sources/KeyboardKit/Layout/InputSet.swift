@@ -42,9 +42,9 @@ public extension InputSet {
         ])
     }
     
-    static func standardNumeric(currency: String) -> InputSet {
+    static func standardNumeric(currency: String,numerics : String = "1234567890") -> InputSet {
         .init(rows: [
-            .init(chars: "1234567890"),
+            .init(chars: numerics),
             .init(phone: "-/:;()\(currency)&@”", pad: "@#\(currency)&*()’”"),
             .init(phone: ".,?!’", pad: "%-+=/;:!?")
         ])

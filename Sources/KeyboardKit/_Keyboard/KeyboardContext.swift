@@ -31,11 +31,35 @@ import UIKit
  KeyboardKit automatically creates an instance of this class
  and binds it to ``KeyboardInputViewController/state``.
  */
+
+
+// MARK: - Custom View Type
+public enum CustomView {
+    
+    case selectfont
+    case selectsymbol
+    case selectkaomojis
+    case selectorganizer
+    
+}
+
+
 public class KeyboardContext: ObservableObject {
 
     public init() {}
 
+    // MARK: = Custom Properties
     
+    @Published
+    public var currentInputSet : InputSetBasedKeyboardLayoutProvider = InputSetBasedKeyboardLayoutProvider()
+    
+    @Published
+    public var showKeyboard : Bool = true
+    
+    @Published
+    public var currentCustomView : CustomView = .selectfont
+
+
     // MARK: - Published Properties
     
     /// Set this to override the ``autocapitalizationType``.

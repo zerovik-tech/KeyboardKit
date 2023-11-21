@@ -59,4 +59,9 @@ open class StandardKeyboardLayoutProvider: KeyboardLayoutProvider {
         let localized = localizedProviders.value(for: context.locale)
         return localized ?? baseProvider
     }
+
+    ///custom function to update the layout provider
+    open func setbase(base : KeyboardLayoutProvider){
+        self.baseProvider = base
+    }
 }
