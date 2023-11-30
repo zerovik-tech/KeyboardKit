@@ -56,10 +56,38 @@ open class StandardKeyboardStyleProvider: KeyboardStyleProvider {
 
     // MARK: - Keyboard
 
-    /// The background style to apply to the entire keyboard.
+    /// Custom background style to apply to the entire keyboard.
     open var backgroundStyle: KeyboardStyle.Background {
-        .standard
+        let context = keyboardContext
+        switch context.colorScheme {
+        case .light:
+            if let selectedTheme = context.selectedLightTheme {
+                //user has selected custom theme(other than default) for light mode
+                return .color(selectedTheme.keyboardBackgroundColor)
+            } else {
+                //user hasn't selected any custom theme (default selected)
+                return .standard
+            }
+        case .dark:
+            if let selectedTheme = context.selectedDarkTheme {
+                //user has selected custom theme(other than default) for dark mode
+                return .color(selectedTheme.keyboardBackgroundColor)
+            } else {
+                //user hasn't selected any custom theme (default selected)
+                return .standard
+            }
+        @unknown default:
+            //this should not execute anyways
+            return .standard
+        }
+        
     }
+
+
+    /// The background style to apply to the entire keyboard.
+    // open var backgroundStyle: KeyboardStyle.Background {
+    //     .standard
+    // }
 
     /// The foreground color to apply to the entire keyboard.
     open var foregroundColor: Color? { nil }
@@ -136,13 +164,60 @@ open class StandardKeyboardStyleProvider: KeyboardStyleProvider {
 
     // MARK: - Callouts
 
-    /// The callout style to apply to callouts.
+     /// The Custom callout style to apply to callouts.
     open var calloutStyle: KeyboardStyle.Callout {
-        var style = KeyboardStyle.Callout.standard
-        let button = buttonStyle(for: .character(""), isPressed: false)
-        style.buttonCornerRadius = button.cornerRadius ?? 5
-        return style
+        let context = keyboardContext
+        switch context.colorScheme {
+        case .light:
+            if let selectedTheme = context.selectedLightTheme {
+                //user has selected custom theme(other than default) for light mode
+                var style = KeyboardStyle.Callout.standard
+                style.backgroundColor = selectedTheme.calloutBackgroundColor
+                style.textColor = selectedTheme.calloutForegroundColor
+                let button = buttonStyle(for: .character(""), isPressed: false)
+                style.buttonCornerRadius = button.cornerRadius ?? 5
+                return style
+            } else {
+                //user hasn't selected any custom theme (default selected)
+                var style = KeyboardStyle.Callout.standard
+                let button = buttonStyle(for: .character(""), isPressed: false)
+                style.buttonCornerRadius = button.cornerRadius ?? 5
+                return style
+            }
+        case .dark:
+            if let selectedTheme = context.selectedDarkTheme {
+                //user has selected custom theme(other than default) for dark mode
+                var style = KeyboardStyle.Callout.standard
+                style.backgroundColor = selectedTheme.calloutBackgroundColor
+                style.textColor = selectedTheme.calloutForegroundColor
+                let button = buttonStyle(for: .character(""), isPressed: false)
+                style.buttonCornerRadius = button.cornerRadius ?? 5
+                return style
+            } else {
+                //user hasn't selected any custom theme (default selected)
+                var style = KeyboardStyle.Callout.standard
+                let button = buttonStyle(for: .character(""), isPressed: false)
+                style.buttonCornerRadius = button.cornerRadius ?? 5
+                return style
+            }
+        @unknown default:
+            //this should not execute anyways
+            var style = KeyboardStyle.Callout.standard
+            let button = buttonStyle(for: .character(""), isPressed: false)
+            style.buttonCornerRadius = button.cornerRadius ?? 5
+            return style
+        }
+     
     }
+
+
+    /// The callout style to apply to callouts.
+    // open var calloutStyle: KeyboardStyle.Callout {
+    //     var style = KeyboardStyle.Callout.standard
+    //     let button = buttonStyle(for: .character(""), isPressed: false)
+    //     style.buttonCornerRadius = button.cornerRadius ?? 5
+    //     return style
+    // }
 
     /// The style to use on ``Callouts/ActionCallout`` views.
     open var actionCalloutStyle: KeyboardStyle.ActionCallout {
@@ -302,20 +377,206 @@ extension KeyboardAction {
             buttonBackgroundColorForIdleState(for: context)
     }
 
+    // func buttonBackgroundColorForIdleState(for context: KeyboardContext) -> Color {
+    //     if isUppercasedShiftAction { return buttonBackgroundColorForPressedState(for: context) }
+    //     if isSystemAction { return .standardDarkButtonBackground(for: context) }
+    //     if isPrimaryAction { return .blue }
+    //     if isUppercasedShiftAction { return .standardButtonBackground(for: context) }
+    //     return .standardButtonBackground(for: context)
+    // }
+
     func buttonBackgroundColorForIdleState(for context: KeyboardContext) -> Color {
-        if isUppercasedShiftAction { return buttonBackgroundColorForPressedState(for: context) }
-        if isSystemAction { return .standardDarkButtonBackground(for: context) }
-        if isPrimaryAction { return .blue }
-        if isUppercasedShiftAction { return .standardButtonBackground(for: context) }
-        return .standardButtonBackground(for: context)
+        
+        switch context.colorScheme {
+        case .light:
+            if isUppercasedShiftAction {
+                if let selectedTheme = context.selectedLightTheme {
+                    //user has selected custom theme(other than default) for light mode
+                    return selectedTheme.secondaryBackgroundColor
+                } else {
+                    //user hasn't selected any custom theme (default selected)
+                    return buttonBackgroundColorForPressedState(for: context)
+                }
+            }
+            if isSystemAction {
+                if let selectedTheme = context.selectedLightTheme {
+                    //user has selected custom theme(other than default) for light mode
+                    return selectedTheme.secondaryBackgroundColor
+                } else {
+                    //user hasn't selected any custom theme (default selected)
+                    return .standardDarkButtonBackground(for: context)
+                }
+            }
+            if isPrimaryAction {
+                if let selectedTheme = context.selectedLightTheme {
+                    //user has selected custom theme(other than default) for light mode
+                    return selectedTheme.secondaryBackgroundColor
+                } else {
+                    //user hasn't selected any custom theme (default selected)
+                    return .blue
+                }
+            }
+            if isUppercasedShiftAction {
+                if let selectedTheme = context.selectedLightTheme {
+                    //user has selected custom theme(other than default) for light mode
+                    return selectedTheme.secondaryBackgroundColor
+                } else {
+                    //user hasn't selected any custom theme (default selected)
+                    return .standardButtonBackground(for: context)
+                }
+            }
+            //color for other keys
+            if let selectedTheme = context.selectedLightTheme {
+                //user has selected custom theme(other than default) for light mode
+                return selectedTheme.primaryBackgroundColor
+            } else {
+                //user hasn't selected any custom theme (default selected)
+                return .standardButtonBackground(for: context)
+            }
+            
+        case .dark:
+            if isUppercasedShiftAction {
+                if let selectedTheme = context.selectedDarkTheme {
+                    //user has selected custom theme(other than default) for dark mode
+                    return selectedTheme.secondaryBackgroundColor
+                } else {
+                    //user hasn't selected any custom theme (default selected)
+                    return buttonBackgroundColorForPressedState(for: context)
+                }
+            }
+            if isSystemAction {
+                if let selectedTheme = context.selectedDarkTheme {
+                    //user has selected custom theme(other than default) for dark mode
+                    return selectedTheme.secondaryBackgroundColor
+                } else {
+                    //user hasn't selected any custom theme (default selected)
+                    return .standardDarkButtonBackground(for: context)
+                }
+            }
+            if isPrimaryAction {
+                if let selectedTheme = context.selectedDarkTheme {
+                    //user has selected custom theme(other than default) for dark mode
+                    return selectedTheme.secondaryBackgroundColor
+                } else {
+                    //user hasn't selected any custom theme (default selected)
+                    return .blue
+                }
+            }
+            if isUppercasedShiftAction {
+                if let selectedTheme = context.selectedDarkTheme {
+                    //user has selected custom theme(other than default) for dark mode
+                    return selectedTheme.secondaryBackgroundColor
+                } else {
+                    //user hasn't selected any custom theme (default selected)
+                    return .standardButtonBackground(for: context)
+                }
+            }
+            //color for other keys
+            if let selectedTheme = context.selectedDarkTheme {
+                //user has selected custom theme(other than default) for dark mode
+                return selectedTheme.primaryBackgroundColor
+            } else {
+                //user hasn't selected any custom theme (default selected)
+                return .standardButtonBackground(for: context)
+            }
+        @unknown default:
+            //this should not execute anyways
+            return .standardButtonBackground(for: context)
+        }
+        
     }
 
+
+    // func buttonBackgroundColorForPressedState(for context: KeyboardContext) -> Color {
+    //     if isSystemAction { return context.hasDarkColorScheme ? .standardButtonBackground(for: context) : .white }
+    //     if isPrimaryAction { return context.hasDarkColorScheme ? .standardDarkButtonBackground(for: context) : .white }
+    //     if isUppercasedShiftAction { return .standardDarkButtonBackground(for: context) }
+    //     return .standardDarkButtonBackground(for: context)
+    // }
+
     func buttonBackgroundColorForPressedState(for context: KeyboardContext) -> Color {
-        if isSystemAction { return context.hasDarkColorScheme ? .standardButtonBackground(for: context) : .white }
-        if isPrimaryAction { return context.hasDarkColorScheme ? .standardDarkButtonBackground(for: context) : .white }
-        if isUppercasedShiftAction { return .standardDarkButtonBackground(for: context) }
-        return .standardDarkButtonBackground(for: context)
+        
+        switch context.colorScheme {
+        case .light:
+            if isSystemAction {
+                if let selectedTheme = context.selectedLightTheme {
+                    //user has selected custom theme(other than default) for light mode
+                    return selectedTheme.secondaryBackgroundColor
+                } else {
+                    //user hasn't selected any custom theme (default selected)
+                    return context.hasDarkColorScheme ? .standardButtonBackground(for: context) : .white
+                }
+            }
+            if isPrimaryAction {
+                if let selectedTheme = context.selectedLightTheme {
+                    //user has selected custom theme(other than default) for light mode
+                    return selectedTheme.secondaryBackgroundColor
+                } else {
+                    //user hasn't selected any custom theme (default selected)
+                    return context.hasDarkColorScheme ? .standardDarkButtonBackground(for: context) : .white
+                }
+            }
+            if isUppercasedShiftAction {
+                if let selectedTheme = context.selectedLightTheme {
+                    //user has selected custom theme(other than default) for light mode
+                    return selectedTheme.secondaryBackgroundColor
+                } else {
+                    //user hasn't selected any custom theme (default selected)
+                    return .standardDarkButtonBackground(for: context)
+                }
+            }
+            //color for other keys
+            if let selectedTheme = context.selectedLightTheme {
+                //user has selected custom theme(other than default) for light mode
+                return selectedTheme.primaryBackgroundColor
+            } else {
+                //user hasn't selected any custom theme (default selected)
+                return .standardDarkButtonBackground(for: context)
+            }
+        case .dark:
+            if isSystemAction {
+                if let selectedTheme = context.selectedDarkTheme {
+                    //user has selected custom theme(other than default) for dark mode
+                    return selectedTheme.secondaryBackgroundColor
+                } else {
+                    //user hasn't selected any custom theme (default selected)
+                    return context.hasDarkColorScheme ? .standardButtonBackground(for: context) : .white
+                }
+            }
+            if isPrimaryAction {
+                if let selectedTheme = context.selectedDarkTheme {
+                    //user has selected custom theme(other than default) for dark mode
+                    return selectedTheme.secondaryBackgroundColor
+                } else {
+                    //user hasn't selected any custom theme (default selected)
+                    return context.hasDarkColorScheme ? .standardDarkButtonBackground(for: context) : .white
+                }
+            }
+            if isUppercasedShiftAction {
+                if let selectedTheme = context.selectedDarkTheme {
+                    //user has selected custom theme(other than default) for dark mode
+                    return selectedTheme.secondaryBackgroundColor
+                } else {
+                    //user hasn't selected any custom theme (default selected)
+                    return .standardDarkButtonBackground(for: context)
+                }
+            }
+            //color for other keys
+            if let selectedTheme = context.selectedDarkTheme {
+                //user has selected custom theme(other than default) for dark mode
+                return selectedTheme.primaryBackgroundColor
+            } else {
+                //user hasn't selected any custom theme (default selected)
+                return .standardDarkButtonBackground(for: context)
+            }
+        @unknown default:
+            //this should not execute anyways
+            return .standardDarkButtonBackground(for: context)
+        }
+        
+   
     }
+
 
     var buttonForegroundColorForAllStates: Color? {
         switch self {
@@ -332,17 +593,155 @@ extension KeyboardAction {
             buttonForegroundColorForIdleState(for: context)
     }
 
+    // func buttonForegroundColorForIdleState(for context: KeyboardContext) -> Color {
+    //     let standard = Color.standardButtonForeground(for: context)
+    //     if isSystemAction { return standard }
+    //     if isPrimaryAction { return .white }
+    //     return standard
+    // }
+
     func buttonForegroundColorForIdleState(for context: KeyboardContext) -> Color {
-        let standard = Color.standardButtonForeground(for: context)
-        if isSystemAction { return standard }
-        if isPrimaryAction { return .white }
-        return standard
+  
+        switch context.colorScheme {
+        case .light:
+            let standard = Color.standardButtonForeground(for: context)
+            if isSystemAction {
+                if let selectedTheme = context.selectedLightTheme {
+                    //user has selected custom theme(other than default) for light mode
+                    return selectedTheme.primaryForegroundColor
+                } else {
+                    //user hasn't selected any custom theme (default selected)
+                    return  standard
+                }
+            }
+            if isPrimaryAction {
+                if let selectedTheme = context.selectedLightTheme {
+                    //user has selected custom theme(other than default) for light mode
+                    return selectedTheme.primaryForegroundColor
+                } else {
+                    //user hasn't selected any custom theme (default selected)
+                    return  .white
+                }
+            }
+            //color for other keys
+            if let selectedTheme = context.selectedLightTheme {
+                //user has selected custom theme(other than default) for light mode
+                return selectedTheme.primaryForegroundColor
+            } else {
+                //user hasn't selected any custom theme (default selected)
+                return  standard
+            }
+        case .dark:
+            let standard = Color.standardButtonForeground(for: context)
+            if isSystemAction {
+                if let selectedTheme = context.selectedDarkTheme {
+                    //user has selected custom theme(other than default) for dark mode
+                    return selectedTheme.primaryForegroundColor
+                } else {
+                    //user hasn't selected any custom theme (default selected)
+                    return  standard
+                }
+            }
+            if isPrimaryAction {
+                if let selectedTheme = context.selectedDarkTheme {
+                    //user has selected custom theme(other than default) for dark mode
+                    return selectedTheme.primaryForegroundColor
+                } else {
+                    //user hasn't selected any custom theme (default selected)
+                    return  .white
+                }
+            }
+            //color for other keys
+            if let selectedTheme = context.selectedDarkTheme {
+                //user has selected custom theme(other than default) for dark mode
+                return selectedTheme.primaryForegroundColor
+            } else {
+                //user hasn't selected any custom theme (default selected)
+                return  standard
+            }
+
+        @unknown default:
+            //this shouldn't execute
+            let standard = Color.standardButtonForeground(for: context)
+            return standard
+        }
+        
+
     }
 
+    // func buttonForegroundColorForPressedState(for context: KeyboardContext) -> Color {
+    //     let standard = Color.standardButtonForeground(for: context)
+    //     if isSystemAction { return standard }
+    //     if isPrimaryAction { return context.hasDarkColorScheme ? .white : standard }
+    //     return standard
+    // }
+
     func buttonForegroundColorForPressedState(for context: KeyboardContext) -> Color {
-        let standard = Color.standardButtonForeground(for: context)
-        if isSystemAction { return standard }
-        if isPrimaryAction { return context.hasDarkColorScheme ? .white : standard }
-        return standard
+        
+        switch context.colorScheme {
+        case .light:
+            let standard = Color.standardButtonBackground(for: context)
+            if isSystemAction {
+                if let selectedTheme = context.selectedLightTheme {
+                    //user has selected custom theme(other than default) for light mode
+                    return selectedTheme.primaryForegroundColor
+                } else {
+                    //user hasn't selected any custom theme (default selected)
+                    return standard
+                }
+            }
+            if isPrimaryAction {
+                if let selectedTheme = context.selectedLightTheme {
+                    //user has selected custom theme(other than default) for light mode
+                    return selectedTheme.primaryForegroundColor
+                } else {
+                    //user hasn't selected any custom theme (default selected)
+                    return context.hasDarkColorScheme ? .white : standard
+                }
+            }
+            //color for other keys
+            if let selectedTheme = context.selectedLightTheme {
+                //user has selected custom theme(other than default) for light mode
+                return selectedTheme.primaryForegroundColor
+            } else {
+                //user hasn't selected any custom theme (default selected)
+                return standard
+            }
+        case .dark:
+            let standard = Color.standardButtonBackground(for: context)
+            if isSystemAction {
+                if let selectedTheme = context.selectedDarkTheme {
+                    //user has selected custom theme(other than default) for dark mode
+                    return selectedTheme.primaryForegroundColor
+                } else {
+                    //user hasn't selected any custom theme (default selected)
+                    return standard
+                }
+            }
+            if isPrimaryAction {
+                if let selectedTheme = context.selectedDarkTheme {
+                    //user has selected custom theme(other than default) for dark mode
+                    return selectedTheme.primaryForegroundColor
+                } else {
+                    //user hasn't selected any custom theme (default selected)
+                    return context.hasDarkColorScheme ? .white : standard
+                }
+            }
+            //color for other keys
+            if let selectedTheme = context.selectedDarkTheme {
+                //user has selected custom theme(other than default) for dark mode
+                return selectedTheme.primaryForegroundColor
+            } else {
+                //user hasn't selected any custom theme (default selected)
+                return standard
+            }
+        @unknown default:
+            //this should not get executed
+            let standard = Color.standardButtonForeground(for: context)
+            return standard
+        }
+        
+
     }
+
 }

@@ -44,6 +44,23 @@ public enum CustomView {
 }
 
 
+// MARK: - Custom Theme
+public struct Theme {
+    
+    let name : String
+    let keyboardBackgroundColor : Color
+    let primaryBackgroundColor : Color      //color of input keys
+    let secondaryBackgroundColor : Color    //color of action keys
+    let primaryForegroundColor : Color
+    let calloutBackgroundColor : Color
+    let calloutForegroundColor : Color
+    
+    public static var bread : Theme = Theme(name: "bread", keyboardBackgroundColor: .pink, primaryBackgroundColor: .orange, secondaryBackgroundColor: .yellow, primaryForegroundColor: .white, calloutBackgroundColor: .orange, calloutForegroundColor: .white)
+    
+    
+    public static var lime : Theme = Theme(name: "lime", keyboardBackgroundColor: .yellow, primaryBackgroundColor: .gray, secondaryBackgroundColor: .red, primaryForegroundColor: .white, calloutBackgroundColor: .gray, calloutForegroundColor: .white)
+}
+
 public class KeyboardContext: ObservableObject {
 
     public init() {}
@@ -58,6 +75,12 @@ public class KeyboardContext: ObservableObject {
     
     @Published
     public var currentCustomView : CustomView = .selectfont
+
+    @Published
+    public var selectedLightTheme : Theme?
+    
+    @Published
+    public var selectedDarkTheme : Theme?
 
 
     // MARK: - Published Properties
