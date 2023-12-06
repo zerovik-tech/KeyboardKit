@@ -169,7 +169,7 @@ public class KeyboardContext: ObservableObject {
     public var selectedDarkTheme : Theme?
 
     @Published
-    public var currentSelectedFont : Font?
+    public var currentSelectedFontID : Int = 0
 
 
     // MARK: - Published Properties
