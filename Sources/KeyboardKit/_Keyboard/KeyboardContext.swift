@@ -40,6 +40,7 @@ public enum CustomView {
     case selectsymbol
     case selectkaomojis
     case selectorganizer
+    case selectEmoji
     
 }
 
