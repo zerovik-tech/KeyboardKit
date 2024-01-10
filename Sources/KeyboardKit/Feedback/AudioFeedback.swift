@@ -55,4 +55,26 @@ public extension AudioFeedback {
     func trigger() {
         AudioFeedback.Engine.shared.trigger(self)
     }
+
+    //Trigger custom feedback
+    func customTrigger(sound : Bool,vibrate : Bool){
+        if(vibrate && sound){
+            //both sound and vibrate
+            AudioFeedback.Engine.shared.trigger(self)
+            AudioFeedback.Engine.shared.trigger(.custom(id: 1520))
+        } else if(sound && !vibrate){
+            //sound but no vibrate
+            
+            AudioFeedback.Engine.shared.trigger(self)
+
+        } else if(!sound && vibrate){
+            //no sound but vibrate
+            AudioFeedback.Engine.shared.trigger(.custom(id: 1520))
+
+        } else {
+            //no sound and no vibrate
+            AudioFeedback.Engine.shared.trigger(.none)
+
+        }
+    }
 }
