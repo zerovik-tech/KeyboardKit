@@ -199,6 +199,8 @@ open class StandardKeyboardActionHandler: NSObject, KeyboardActionHandler {
         if action == .backspace { return config.delete }
         if action.isInputAction { return config.input }
         if action.isSystemAction { return config.system }
+        if action == .custom(named: "emoji") { return config.input }    //feedback for custom emoji action gesture (same as input feedback)
+
         return nil
     }
     
